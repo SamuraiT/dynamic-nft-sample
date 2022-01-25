@@ -15,11 +15,16 @@ const main = async () => {
 
   // We get the contract to deploy
   const DynamicNFT = await hre.ethers.getContractFactory("DynamicNFT");
+  const accounts = await hre.ethers.getSigners();
+  console.log(accounts.map(ac => ac.address))
   const dnft = await DynamicNFT.deploy();
-
   await dnft.deployed();
 
-  console.log("Greeter deployed to:", dnft.address);
+  const tx = await dnft.makeDyamicNFT()
+  await tx.wait()
+
+  const tokenURI = await dnft.tokenURI(0)
+  console.log(tokenURI)
 }
 
 (async () => {
@@ -27,7 +32,7 @@ const main = async () => {
     await main()
     process.exit(0)
   } catch (e) {
-    console.error(error);
+    console.error(e);
     process.exit(1);
   }
 })()

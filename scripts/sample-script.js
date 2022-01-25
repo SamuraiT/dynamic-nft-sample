@@ -19,6 +19,7 @@ const main = async () => {
   console.log(accounts.map(ac => ac.address))
   const dnft = await DynamicNFT.deploy();
   await dnft.deployed();
+  console.log("contract address: ", dnft.address)
 
   const tx = await dnft.makeDyamicNFT()
   await tx.wait()

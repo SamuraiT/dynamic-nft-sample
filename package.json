@@ -7,6 +7,7 @@
     "start": "next start",
     "lint": "next lint",
     "hardhat": "npx hardhat run scripts/sample-script.js",
+    "hardhat-deploy-testnet": "npx hardhat run scripts/sample-script.js --network rinkeby",
     "hardhat-console": "npx hardhat console"
   },
   "dependencies": {

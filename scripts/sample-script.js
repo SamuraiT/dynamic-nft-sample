@@ -5,7 +5,7 @@
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
 
-async function main() {
+const main = async () => {
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
   //
@@ -14,19 +14,25 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const DynamicNFT = await hre.ethers.getContractFactory("DynamicNFT");
+  const accounts = await hre.ethers.getSigners();
+  console.log(accounts.map(ac => ac.address))
+  const dnft = await DynamicNFT.deploy();
+  await dnft.deployed();
 
-  await greeter.deployed();
+  const tx = await dnft.makeDyamicNFT()
+  await tx.wait()
 
-  console.log("Greeter deployed to:", greeter.address);
+  const tokenURI = await dnft.tokenURI(0)
+  console.log(tokenURI)
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
+(async () => {
+  try {
+    await main()
+    process.exit(0)
+  } catch (e) {
+    console.error(e);
     process.exit(1);
-  });
+  }
+})()

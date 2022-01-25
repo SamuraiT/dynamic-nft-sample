@@ -5,9 +5,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "hardhat": "npx hardhat run scripts/sample-script.js",
+    "hardhat-console": "npx hardhat console"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^4.4.2",
     "next": "12.0.8",
     "react": "17.0.2",
     "react-dom": "17.0.2"

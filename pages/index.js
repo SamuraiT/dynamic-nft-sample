@@ -1,6 +1,3 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import React, { useEffect, useState } from "react"
 import { Divider, Grid, Button, Header, Container, Input } from 'semantic-ui-react'
 const {Row, Column } = Grid
@@ -145,8 +142,8 @@ const Home = () => {
             </Divider>
             <p>Enter Token ID (must be a number)</p>
             <input value={tokenId} onChange={({target}) => setTokenId(target.value)} />
-            { tokenId && <p><a href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank">> Check NFT in Opeansea</a></p> }
-            { tokenId && <p><a href={`https://rinkeby.rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank">> Check NFT in rarible</a></p> }
+            { tokenId && <p><a href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
+            { tokenId && <p><a href={`https://rinkeby.rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in rarible</a></p> }
             { dataURI && <ShowSVGImage dataURI={dataURI} /> }
           </Container>
         </Column>

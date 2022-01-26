@@ -8,7 +8,9 @@
     "lint": "next lint",
     "hardhat": "npx hardhat run scripts/sample-script.js",
     "hardhat-deploy-testnet": "npx hardhat run scripts/sample-script.js --network rinkeby",
-    "hardhat-console": "npx hardhat console"
+    "hardhat-console": "npx hardhat console",
+    "export": "NODE_ENV=production next build && NODE_ENV=production next export",
+    "deploy": "firebase deploy"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.2",

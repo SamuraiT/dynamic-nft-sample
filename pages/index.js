@@ -8,7 +8,7 @@ const {Row, Column } = Grid
 import { ethers } from "ethers";
 import DynamicNFT from "../artifacts/contracts/DynamicNFT.sol/DynamicNFT.json"
 
-const CONTRACT_ADDRESS = "0xd118aBbCB4E31d20aacD9EFE22185a01cc1a14d9"
+const CONTRACT_ADDRESS = "0x691A42DAD672C90Ba435eA01D2c5cB0f6943c46D"
 
 const ConnectWallet = ({setAcount}) => {
   return (

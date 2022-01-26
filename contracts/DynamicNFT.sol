@@ -12,6 +12,8 @@ contract DynamicNFT is ERC721URIStorage {
   string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
   Counters.Counter private _tokenIds;
 
+  mapping(uint256 => string) public viewableMessage;
+
   event NewBasicNFTMinted (
     address sender,
     uint256 tokenId
@@ -28,7 +30,7 @@ contract DynamicNFT is ERC721URIStorage {
       abi.encodePacked(
         '{"name": "',
         _word,
-        '", "description": "Sushi sakana", "image": "data:image/svg+xml;base64,', 
+        '", "description": "Sushi sakana", "image": "data:image/svg+xml;base64,',
         Base64.encode(bytes(finalSvg)),
         '"}'
       )
@@ -47,22 +49,24 @@ contract DynamicNFT is ERC721URIStorage {
     }
 
     console.log("msg sender is not owner");
-    string memory _svgURI = makeSVGTokenURL("");
+    string memory _svgURI = makeSVGTokenURL(viewableMessage[tokenId]);
     return _svgURI;
   }
 
-  function makeDyamicNFT() public {
+  function makeDyamicNFT(string memory _ownerMsg, string memory _viewableMsg) public {
     uint256 newItemId = _tokenIds.current();
     require(newItemId <= 100);
     _safeMint(msg.sender, newItemId);
 
-    string memory finalTokenUri = makeSVGTokenURL("sakana");
+    string memory finalTokenUri = makeSVGTokenURL(_ownerMsg);
 
     console.log("---mint---");
     console.log(finalTokenUri);
     console.log("---mint---");
 
     _setTokenURI(newItemId, finalTokenUri);
+    viewableMessage[newItemId] = _viewableMsg;
+
     console.log("ID:%s, Address: %s", newItemId, msg.sender);
     _tokenIds.increment();
     emit NewBasicNFTMinted(msg.sender, newItemId);

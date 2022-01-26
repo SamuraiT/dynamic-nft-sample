@@ -21,7 +21,7 @@ const main = async () => {
   await dnft.deployed();
   console.log("contract address: ", dnft.address)
 
-  const tx = await dnft.makeDyamicNFT("owners message", "viewable message")
+  const tx = await dnft.makeDyamicNFT("owners message あいう", "viewable message")
   await tx.wait()
 
   const tokenURI = await dnft.tokenURI(0)

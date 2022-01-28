@@ -40,7 +40,7 @@ const SketchColorPicker = ({color,setColor}) => {
   });
 
   return (
-    <div>
+    <>
       <div style={ styles.swatch } onClick={() => setDisplayColorPicker(!displayColorPicker) }>
         <div style={ styles.color } />
       </div>
@@ -50,7 +50,7 @@ const SketchColorPicker = ({color,setColor}) => {
           <SketchPicker color={ color } onChange={({rgb}) =>  setColor(rgb2Text(rgb))} />
         </div>
       ) }
-    </div>
+    </>
   )
 }
 

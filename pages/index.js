@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react"
-import { Divider, Grid, Button, Header, Container, Input } from 'semantic-ui-react'
+import {
+  Divider,
+  Grid,
+  Button,
+  Header,
+  Container,
+  Input,
+  Radio
+} from 'semantic-ui-react'
 const {Row, Column } = Grid
 
 import { ethers } from "ethers"
 import DynamicNFT from "../artifacts/contracts/DynamicNFT.sol/DynamicNFT.json"
 import SketchColorPicker from "../components/SketchColorPicker"
+import {
+  base64,
+  ShowSVGImage,
+  baseSvgSrc
+} from "../components/utils"
 const CONTRACT_ADDRESS = "0x691A42DAD672C90Ba435eA01D2c5cB0f6943c46D"
 
 const ConnectWallet = ({setAcount}) => {
@@ -41,23 +54,6 @@ const getDataURI = async (tokenId) => {
     return;
   }
 }
-const base64 = (str) => {
-  return btoa(unescape(encodeURIComponent( str )))
-}
-const ShowSVGImage = ({dataURI}) => {
-  const json = atob(dataURI.substring(29));
-  const { image } = JSON.parse(json);
-  console.log(image)
-  return (
-    <img src={image} />
-  )
-}
-
-const baseSvgSrc = (text, backgroundColor, textColor) => {
-  const baseSvg = `<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'> <style>.base { fill: ${textColor}; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='${backgroundColor}' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>${text}</text></svg>`
-  return `data:image/svg+xml;base64,${base64(baseSvg)}`
-}
-
 const connectWallet = async (setAccount) => {
     try {
       const { ethereum } = window
@@ -105,24 +101,18 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [tokenId, setTokenId] = useState()
   const [dataURI, setDataURI] = useState()
-  const [textColor, setTextColor] = useState("#fff")
+  const [textColor, setTextColor] = useState("rgb(256,256,256)")
   const [backgroundColor, setBackgroundColor] = useState("rgb(0,0,0)")
   const [preview, setPreviewImage] = useState()
-  const [displayBacgroundColorPicker, setBGCPicker] = useState(true)
+  const [option, setOption] = useState('owner')
   useEffect(() => {
     setWalletAccountIfConnected(setAcount)
   }, [])
-
 
   useEffect(async() => {
     setDataURI(await getDataURI(tokenId))
   }, [tokenId])
 
-  useEffect(() => {
-    console.log(textColor, backgroundColor, ownersMsg)
-    console.log(baseSvgSrc(ownersMsg, backgroundColor, textColor))
-    setPreviewImage(baseSvgSrc(ownersMsg, backgroundColor, textColor))
-  }, [ownersMsg, viewableMsg, textColor, backgroundColor])
   return (
     <Grid>
       <Row/>
@@ -145,17 +135,37 @@ const Home = () => {
                 <Input placeholder='' row={100} onChange={({target}) => setViewableMsg(target.value)} value={viewableMsg}/>
               </div>
               <div>
-                <p>Choose the color for background</p>
-                <SketchColorPicker color={backgroundColor} setColor={setBackgroundColor}/>
+                <div style={{marginTop: '10px', paddingTop: "10px"}}>
+                  <span>pick background color: </span>
+                  <SketchColorPicker color={backgroundColor} setColor={setBackgroundColor}/>
+                </div>
               </div>
 
               <div>
-                <p>Choose the color for text</p>
-                <SketchColorPicker color={textColor} setColor={setTextColor}/>
+                <div style={{marginTop: '10px', paddingTop: "10px"}}>
+                  <span>pick background color: </span>
+                  <SketchColorPicker color={textColor} setColor={setTextColor}/>
+                </div>
               </div>
               <div style={{marginTop: 15}} />
               <div>
-                { preview && <img src={preview} /> }
+                <p>preview by: {option}</p>
+                 <Radio
+                    label='owners message'
+                    name='option'
+                    value='owner'
+                    checked={option === 'owner'}
+                    onChange={(e, {value}) => setOption(value)}
+                  />
+                 <Radio
+                    label='viewers message'
+                    name='option'
+                    value='viewer'
+                    checked={option === 'viewer'}
+                    onChange={(e, {value}) => setOption(value)}
+                  />
+
+                <img src={baseSvgSrc(option == 'owner' ? ownersMsg : viewableMsg, backgroundColor, textColor)} />
               </div>
               <Button onClick={() => mintNft(ownersMsg, viewableMsg, setLoading, setTokenId)} color='teal' size="large" loading={loading}>
                mint it

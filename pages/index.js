@@ -20,7 +20,29 @@ import {
   ShowSVGImage,
   baseSvgSrc
 } from "../components/utils"
+const maticChainId = "0x89"
 
+const switchMaticNetwork = async () => {
+  try {
+
+    const { ethereum } = window
+    if (!ethereum) {
+      console.log("Install metamask")
+      return;
+    }
+    let chainId = await ethereum.request({ method: 'eth_chainId' });
+    console.log(chainId)
+    if (chainId != maticChainId) {
+      const result = await ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: maticChainId}],
+      })
+      console.log(result)
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
 const ConnectWallet = ({setAcount}) => {
   return (
       <Button onClick={() => connectWallet(setAcount)}>
@@ -111,6 +133,7 @@ const Home = ({NETWORK}) => {
   console.log(CONTRACT_ADDRESS)
   useEffect(() => {
     setWalletAccountIfConnected(setAcount, CONTRACT_ADDRESS)
+    switchMaticNetwork()
   }, [])
 
   useEffect(async() => {

@@ -163,14 +163,14 @@ const Home = ({NETWORK}) => {
               </div>
               <div>
                 <div style={{marginTop: '10px', paddingTop: "10px"}}>
-                  <span>pick background color: </span>
+                  <span>pick up background color: </span>
                   <SketchColorPicker color={backgroundColor} setColor={setBackgroundColor}/>
                 </div>
               </div>
 
               <div>
                 <div style={{marginTop: '10px', paddingTop: "10px"}}>
-                  <span>pick background color: </span>
+                  <span>pick up text color: </span>
                   <SketchColorPicker color={textColor} setColor={setTextColor}/>
                 </div>
               </div>

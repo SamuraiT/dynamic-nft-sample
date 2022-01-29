@@ -168,14 +168,14 @@ const Home = () => {
 
                 <img src={baseSvgSrc(option == 'owner' ? ownersMsg : viewableMsg, backgroundColor, textColor)} />
               </div>
-              <Button onClick={() => mintNft(ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId)} color='teal' size="large" loading={loading}>
+              <Button onClick={() => mintNft(ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId)} color='teal' size="large" loading={loading} style={{marginTop: "10px"}}>
                mint it
               </Button>
               </>
             ) }
 
-              <p>
-                Build with ❤️  by <a href="https://twitter.com/SamuraiT01">yasek</a>. Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
+              <p style={{marginTop: "10px"}}>
+                Build with❤️  by <a href="https://twitter.com/SamuraiT01">yasek</a>. Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
               </p>
             <Divider horizontal>
               <Header as='h4'>

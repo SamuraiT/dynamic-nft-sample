@@ -11,14 +11,19 @@ import {
 const { Row, Column } = Grid
 
 import { ethers } from "ethers"
-import DynamicNFT from "../artifacts/contracts/DynamicNFT.sol/DynamicNFT.json"
+import dynamic from 'next/dynamic'
+import DynamicNFTRinkeby from "../artifacts/rinkeby/contracts/DynamicNFT.sol/DynamicNFT.json"
+import DynamicNFTMainnet from "../artifacts/stgaing/contracts/DynamicNFT.sol/DynamicNFT.json"
+const DynamicNFT = process.env.NETWORK == "matic" ? DynamicNFTMainnet : DynamicNFTRinkeby
+
 import SketchColorPicker from "../components/SketchColorPicker"
 import {
   base64,
   ShowSVGImage,
   baseSvgSrc
 } from "../components/utils"
-const CONTRACT_ADDRESS = "0xb0134f46fc2dF81C67aCC6dC6C5C735cfcc3101D"
+
+const CONTRACT_ADDRESS = process.env.NETWORK == "matic" ? "" : "0x6bd31a75Fe124FECc1Edc932aD722f4c42E72c10"
 
 const ConnectWallet = ({setAcount}) => {
   return (

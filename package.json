@@ -2,14 +2,14 @@
   "name": "dynamic-nft-sample",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NETWORK=rinkeby next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "hardhat": "npx hardhat run scripts/sample-script.js",
-    "hardhat-deploy-testnet": "npx hardhat run scripts/sample-script.js --network rinkeby",
-    "hardhat-console": "npx hardhat console",
-    "export": "NODE_ENV=production next build && NODE_ENV=production next export",
+    "hardhat-deploy-testnet": "NETWORK=rinkeby npx hardhat run scripts/sample-script.js --network rinkeby",
+    "hardhat-console": "NETWORK=local npx hardhat console",
+    "export": "NETWORK=matic next build && NETWORK=matic next export",
     "deploy": "firebase deploy"
   },
   "dependencies": {

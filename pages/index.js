@@ -174,6 +174,9 @@ const Home = () => {
               </>
             ) }
 
+              <p>
+                Build with ❤️  by <a href="https://twitter.com/SamuraiT01">yasek</a>. Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
+              </p>
             <Divider horizontal>
               <Header as='h4'>
                 Show Image of TokenId

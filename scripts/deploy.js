@@ -26,8 +26,8 @@ const main = async () => {
   const tx = await dnft.makeDyamicNFT("My first dynamic NFT. Interesting", "Omoshiroine NFT", textColor, backgroundColor)
   await tx.wait()
 
-  const tokenURI = await dnft.tokenURI(0)
-  console.log(tokenURI)
+  //const tokenURI = await dnft.tokenURI(0)
+  //console.log(tokenURI)
 }
 
 (async () => {

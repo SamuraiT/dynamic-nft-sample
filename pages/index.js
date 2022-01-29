@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from "react"
-import { Divider, Grid, Button, Header, Container, Input } from 'semantic-ui-react'
-const {Row, Column } = Grid
+import {
+  Divider,
+  Grid,
+  Button,
+  Header,
+  Container,
+  Input,
+  Radio
+} from 'semantic-ui-react'
+const { Row, Column } = Grid
 
 import { ethers } from "ethers"
-import DynamicNFT from "../artifacts/contracts/DynamicNFT.sol/DynamicNFT.json"
+import dynamic from 'next/dynamic'
+import DynamicNFT from "../artifacts/matic/contracts/DynamicNFT.sol/DynamicNFT.json"
 
-const CONTRACT_ADDRESS = "0x691A42DAD672C90Ba435eA01D2c5cB0f6943c46D"
+import SketchColorPicker from "../components/SketchColorPicker"
+import {
+  base64,
+  ShowSVGImage,
+  baseSvgSrc
+} from "../components/utils"
 
 const ConnectWallet = ({setAcount}) => {
   return (
@@ -15,7 +29,7 @@ const ConnectWallet = ({setAcount}) => {
   )
 }
 
-const setWalletAccountIfConnected = async (setAccount) => {
+const setWalletAccountIfConnected = async (setAccount, CONTRACT_ADDRESS) => {
   const { ethereum } = window;
 
   if (!ethereum) {
@@ -26,7 +40,7 @@ const setWalletAccountIfConnected = async (setAccount) => {
   setAccount(accounts[0])
 }
 
-const getDataURI = async (tokenId) => {
+const getDataURI = async (tokenId, CONTRACT_ADDRESS) => {
   try {
     const { ethereum } = window
     if (ethereum) {
@@ -41,16 +55,6 @@ const getDataURI = async (tokenId) => {
     return;
   }
 }
-
-const ShowSVGImage = ({dataURI}) => {
-  const json = atob(dataURI.substring(29));
-  const { image } = JSON.parse(json);
-  console.log(image)
-  return (
-    <img src={image} />
-  )
-}
-
 const connectWallet = async (setAccount) => {
     try {
       const { ethereum } = window
@@ -66,7 +70,7 @@ const connectWallet = async (setAccount) => {
     }
 }
 
-const mintNft = async (ownersMsg, viewableMsg, setLoading, setTokenId) => {
+const mintNft = async (ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId, CONTRACT_ADDRESS) => {
   if (!viewableMsg || !ownersMsg) {
     alert('enter messages')
     return
@@ -80,10 +84,10 @@ const mintNft = async (ownersMsg, viewableMsg, setLoading, setTokenId) => {
       const signer = provider.getSigner()
       const contract = new ethers.Contract(CONTRACT_ADDRESS, DynamicNFT.abi, signer)
 
-      let tx = await contract.makeDyamicNFT(ownersMsg, viewableMsg)
+      let tx = await contract.makeDyamicNFT(ownersMsg, viewableMsg, textColor, backgroundColor)
       const logs = await tx.wait()
       setTokenId(logs.events[0].args.tokenId.toNumber())
-      alert("Tada! 🎉 check your account in testnet opensea! https://testnets.opensea.io/ , it takes 5, 10min to dipct")
+      alert("Tada! 🎉 check your account in opensea! https://opensea.io/ , it takes 5, 10min to dipct")
     }
   } catch (e) {
     console.log(e)
@@ -91,22 +95,28 @@ const mintNft = async (ownersMsg, viewableMsg, setLoading, setTokenId) => {
   setLoading(false)
 }
 
-const Home = () => {
+const Home = ({NETWORK}) => {
   const [account, setAcount] = useState()
   const [viewableMsg, setViewableMsg] = useState("")
   const [ownersMsg, setOwnersMsg] = useState("")
   const [loading, setLoading] = useState(false)
   const [tokenId, setTokenId] = useState()
   const [dataURI, setDataURI] = useState()
+  const [textColor, setTextColor] = useState("rgb(256,256,256)")
+  const [backgroundColor, setBackgroundColor] = useState("rgb(0,0,0)")
+  const [preview, setPreviewImage] = useState()
+  const [option, setOption] = useState('owner')
 
+  const CONTRACT_ADDRESS = NETWORK == "matic"  ? "0x7Dff3728DD7dDa7619053cFCac9f136cb654eACc" : "0xD45D2Ca7295da5BF2D1419cdAaCA8B62d67f735B"
+  console.log(CONTRACT_ADDRESS)
   useEffect(() => {
-    setWalletAccountIfConnected(setAcount)
+    setWalletAccountIfConnected(setAcount, CONTRACT_ADDRESS)
   }, [])
 
-
   useEffect(async() => {
-    setDataURI(await getDataURI(tokenId))
+    setDataURI(await getDataURI(tokenId, CONTRACT_ADDRESS))
   }, [tokenId])
+
   return (
     <Grid>
       <Row/>
@@ -128,13 +138,48 @@ const Home = () => {
                 <p>A message others can see: </p>
                 <Input placeholder='' row={100} onChange={({target}) => setViewableMsg(target.value)} value={viewableMsg}/>
               </div>
+              <div>
+                <div style={{marginTop: '10px', paddingTop: "10px"}}>
+                  <span>pick background color: </span>
+                  <SketchColorPicker color={backgroundColor} setColor={setBackgroundColor}/>
+                </div>
+              </div>
+
+              <div>
+                <div style={{marginTop: '10px', paddingTop: "10px"}}>
+                  <span>pick background color: </span>
+                  <SketchColorPicker color={textColor} setColor={setTextColor}/>
+                </div>
+              </div>
               <div style={{marginTop: 15}} />
-              <Button onClick={() => mintNft(ownersMsg, viewableMsg, setLoading, setTokenId)} color='teal' size="large" loading={loading}>
+              <div>
+                <p>preview by: {option}</p>
+                 <Radio
+                    label='owners message'
+                    name='option'
+                    value='owner'
+                    checked={option === 'owner'}
+                    onChange={(e, {value}) => setOption(value)}
+                  />
+                 <Radio
+                    label='viewers message'
+                    name='option'
+                    value='viewer'
+                    checked={option === 'viewer'}
+                    onChange={(e, {value}) => setOption(value)}
+                  />
+
+                <img src={baseSvgSrc(option == 'owner' ? ownersMsg : viewableMsg, backgroundColor, textColor)} />
+              </div>
+              <Button onClick={() => mintNft(ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId, CONTRACT_ADDRESS)} color='teal' size="large" loading={loading} style={{marginTop: "10px"}}>
                mint it
               </Button>
               </>
             ) }
 
+              <p style={{marginTop: "10px"}}>
+                Build with❤️  . Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
+              </p>
             <Divider horizontal>
               <Header as='h4'>
                 Show Image of TokenId
@@ -142,14 +187,22 @@ const Home = () => {
             </Divider>
             <p>Enter Token ID (must be a number)</p>
             <input value={tokenId} onChange={({target}) => setTokenId(target.value)} />
-            { tokenId && <p><a href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
-            { tokenId && <p><a href={`https://rinkeby.rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in rarible</a></p> }
+            { tokenId && <p><a href={`https://opensea.io/matic/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
+            { tokenId && <p><a href={`https://rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in rarible</a></p> }
             { dataURI && <ShowSVGImage dataURI={dataURI} /> }
           </Container>
         </Column>
       </Row>
     </Grid>
   )
+}
+export async function getStaticProps() {
+  const NETWORK = process.env.NETWORK
+  return {
+    props: {
+      NETWORK
+    }
+  }
 }
 
 export default Home;

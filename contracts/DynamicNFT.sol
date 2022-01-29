@@ -9,28 +9,45 @@ import { Base64 } from "./libraries/Base64.sol";
 
 contract DynamicNFT is ERC721URIStorage {
   using Counters for Counters.Counter;
-  string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
   Counters.Counter private _tokenIds;
 
-  mapping(uint256 => string) public viewableMessage;
+  struct NFT {
+    string message;
+    string textColor;
+    string backgroundColor;
+  }
+
+  mapping(uint256 => NFT) private viewableMessage;
 
   event NewBasicNFTMinted (
     address sender,
     uint256 tokenId
   );
 
-  constructor() ERC721 ("WalletGacha", "gacha") {
+  constructor() ERC721 ("Himitsu NFT", "secret NFT") {
     console.log("dynamic nft");
   }
 
-  function makeSVGTokenURL(string memory _word) internal view returns (string memory) {
-    string memory finalSvg = string(abi.encodePacked(baseSvg, _word, "</text></svg>"));
+  function buildBaseSVG(NFT memory nft) private view returns (string memory) {
+    return string(abi.encodePacked(
+      "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: ",
+      nft.textColor,
+      "; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='",
+      nft.backgroundColor,
+      "' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>",
+      nft.message,
+      "</text></svg>"
+    ));
+  }
 
+  function makeSVGTokenURL(NFT memory nft) private view returns (string memory) {
+    //string memory finalSvg = string(abi.encodePacked(baseSvg, _word, "</text></svg>"));
+    string memory finalSvg = buildBaseSVG(nft);
     string memory json = Base64.encode(bytes(string(
       abi.encodePacked(
         '{"name": "',
-        _word,
-        '", "description": "Sushi sakana", "image": "data:image/svg+xml;base64,',
+        nft.message,
+        '", "description": "secret NFT. only the owner of a NFT can see a special message", "image": "data:image/svg+xml;base64,',
         Base64.encode(bytes(finalSvg)),
         '"}'
       )
@@ -53,19 +70,25 @@ contract DynamicNFT is ERC721URIStorage {
     return _svgURI;
   }
 
-  function makeDyamicNFT(string memory _ownerMsg, string memory _viewableMsg) public {
+  function makeDyamicNFT(
+    string memory _ownerMsg,
+    string memory _viewableMsg,
+    string memory _textColor,
+    string memory _backgroundColor
+  ) public {
     uint256 newItemId = _tokenIds.current();
-    require(newItemId <= 100);
     _safeMint(msg.sender, newItemId);
+    NFT memory ownerNFT = NFT(_ownerMsg, _textColor, _backgroundColor);
+    NFT memory viewableNFT = NFT(_viewableMsg, _textColor, _backgroundColor);
 
-    string memory finalTokenUri = makeSVGTokenURL(_ownerMsg);
+    string memory finalTokenUri = makeSVGTokenURL(ownerNFT);
 
     console.log("---mint---");
     console.log(finalTokenUri);
     console.log("---mint---");
 
     _setTokenURI(newItemId, finalTokenUri);
-    viewableMessage[newItemId] = _viewableMsg;
+    viewableMessage[newItemId] = viewableNFT;
 
     console.log("ID:%s, Address: %s", newItemId, msg.sender);
     _tokenIds.increment();

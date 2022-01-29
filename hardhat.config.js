@@ -25,9 +25,12 @@ module.exports = {
       accounts: [process.env.PRIVATE_KEY],
     },
     mainnet: {
-      chainId: 1,
+      chainId: 137,
       url: process.env.PROD_ALCHEMY_KEY,
       accounts: [process.env.PRIVATE_KEY],
     },
+  },
+  paths: {
+    artifacts: `./artifacts/${process.env.NETWORK}`
   },
 };

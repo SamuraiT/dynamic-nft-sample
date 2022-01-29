@@ -2,20 +2,22 @@
   "name": "dynamic-nft-sample",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NETWORK=rinkeby next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "hardhat": "npx hardhat run scripts/sample-script.js",
-    "hardhat-deploy-testnet": "npx hardhat run scripts/sample-script.js --network rinkeby",
-    "hardhat-console": "npx hardhat console",
-    "export": "NODE_ENV=production next build && NODE_ENV=production next export",
+    "hardhat-deploy-testnet": "NETWORK=rinkeby npx hardhat run scripts/sample-script.js --network rinkeby",
+    "hardhat-deploy-mainnet": "npx hardhat run scripts/deploy.js --network mainnet",
+    "hardhat-console": "NETWORK=local npx hardhat console",
+    "export": "NETWORK=matic next build && NETWORK=matic next export",
     "deploy": "firebase deploy"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.2",
     "next": "12.0.8",
     "react": "17.0.2",
+    "react-color": "^2.19.3",
     "react-dom": "17.0.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.1.1"

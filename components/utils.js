@@ -4,7 +4,6 @@ const base64 = (str) => {
 const ShowSVGImage = ({dataURI}) => {
   const json = atob(dataURI.substring(29));
   const { image } = JSON.parse(json);
-  console.log(image)
   return (
     <img src={image} />
   )

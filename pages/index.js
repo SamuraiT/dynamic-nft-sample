@@ -12,9 +12,7 @@ const { Row, Column } = Grid
 
 import { ethers } from "ethers"
 import dynamic from 'next/dynamic'
-import DynamicNFTRinkeby from "../artifacts/rinkeby/contracts/DynamicNFT.sol/DynamicNFT.json"
-import DynamicNFTMainnet from "../artifacts/stgaing/contracts/DynamicNFT.sol/DynamicNFT.json"
-const DynamicNFT = process.env.NETWORK == "matic" ? DynamicNFTMainnet : DynamicNFTRinkeby
+import DynamicNFT from "../artifacts/matic/contracts/DynamicNFT.sol/DynamicNFT.json"
 
 import SketchColorPicker from "../components/SketchColorPicker"
 import {
@@ -22,8 +20,6 @@ import {
   ShowSVGImage,
   baseSvgSrc
 } from "../components/utils"
-
-const CONTRACT_ADDRESS = process.env.NETWORK == "matic" ? "" : "0x6bd31a75Fe124FECc1Edc932aD722f4c42E72c10"
 
 const ConnectWallet = ({setAcount}) => {
   return (
@@ -33,7 +29,7 @@ const ConnectWallet = ({setAcount}) => {
   )
 }
 
-const setWalletAccountIfConnected = async (setAccount) => {
+const setWalletAccountIfConnected = async (setAccount, CONTRACT_ADDRESS) => {
   const { ethereum } = window;
 
   if (!ethereum) {
@@ -44,7 +40,7 @@ const setWalletAccountIfConnected = async (setAccount) => {
   setAccount(accounts[0])
 }
 
-const getDataURI = async (tokenId) => {
+const getDataURI = async (tokenId, CONTRACT_ADDRESS) => {
   try {
     const { ethereum } = window
     if (ethereum) {
@@ -74,7 +70,7 @@ const connectWallet = async (setAccount) => {
     }
 }
 
-const mintNft = async (ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId) => {
+const mintNft = async (ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId, CONTRACT_ADDRESS) => {
   if (!viewableMsg || !ownersMsg) {
     alert('enter messages')
     return
@@ -91,7 +87,7 @@ const mintNft = async (ownersMsg, viewableMsg, textColor, backgroundColor, setLo
       let tx = await contract.makeDyamicNFT(ownersMsg, viewableMsg, textColor, backgroundColor)
       const logs = await tx.wait()
       setTokenId(logs.events[0].args.tokenId.toNumber())
-      alert("Tada! 🎉 check your account in testnet opensea! https://testnets.opensea.io/ , it takes 5, 10min to dipct")
+      alert("Tada! 🎉 check your account in opensea! https://opensea.io/ , it takes 5, 10min to dipct")
     }
   } catch (e) {
     console.log(e)
@@ -99,7 +95,7 @@ const mintNft = async (ownersMsg, viewableMsg, textColor, backgroundColor, setLo
   setLoading(false)
 }
 
-const Home = () => {
+const Home = ({NETWORK}) => {
   const [account, setAcount] = useState()
   const [viewableMsg, setViewableMsg] = useState("")
   const [ownersMsg, setOwnersMsg] = useState("")
@@ -111,12 +107,14 @@ const Home = () => {
   const [preview, setPreviewImage] = useState()
   const [option, setOption] = useState('owner')
 
+  const CONTRACT_ADDRESS = NETWORK == "matic"  ? "0x7Dff3728DD7dDa7619053cFCac9f136cb654eACc" : "0xD45D2Ca7295da5BF2D1419cdAaCA8B62d67f735B"
+  console.log(CONTRACT_ADDRESS)
   useEffect(() => {
-    setWalletAccountIfConnected(setAcount)
+    setWalletAccountIfConnected(setAcount, CONTRACT_ADDRESS)
   }, [])
 
   useEffect(async() => {
-    setDataURI(await getDataURI(tokenId))
+    setDataURI(await getDataURI(tokenId, CONTRACT_ADDRESS))
   }, [tokenId])
 
   return (
@@ -173,14 +171,14 @@ const Home = () => {
 
                 <img src={baseSvgSrc(option == 'owner' ? ownersMsg : viewableMsg, backgroundColor, textColor)} />
               </div>
-              <Button onClick={() => mintNft(ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId)} color='teal' size="large" loading={loading} style={{marginTop: "10px"}}>
+              <Button onClick={() => mintNft(ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId, CONTRACT_ADDRESS)} color='teal' size="large" loading={loading} style={{marginTop: "10px"}}>
                mint it
               </Button>
               </>
             ) }
 
               <p style={{marginTop: "10px"}}>
-                Build with❤️  by <a href="https://twitter.com/SamuraiT01">yasek</a>. Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
+                Build with❤️  . Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
               </p>
             <Divider horizontal>
               <Header as='h4'>
@@ -189,14 +187,22 @@ const Home = () => {
             </Divider>
             <p>Enter Token ID (must be a number)</p>
             <input value={tokenId} onChange={({target}) => setTokenId(target.value)} />
-            { tokenId && <p><a href={`https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
-            { tokenId && <p><a href={`https://rinkeby.rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in rarible</a></p> }
+            { tokenId && <p><a href={`https://opensea.io/matic/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
+            { tokenId && <p><a href={`https://rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in rarible</a></p> }
             { dataURI && <ShowSVGImage dataURI={dataURI} /> }
           </Container>
         </Column>
       </Row>
     </Grid>
   )
+}
+export async function getStaticProps() {
+  const NETWORK = process.env.NETWORK
+  return {
+    props: {
+      NETWORK
+    }
+  }
 }
 
 export default Home;

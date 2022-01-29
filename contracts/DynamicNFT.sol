@@ -17,7 +17,7 @@ contract DynamicNFT is ERC721URIStorage {
     string backgroundColor;
   }
 
-  mapping(uint256 => NFT) public viewableMessage;
+  mapping(uint256 => NFT) private viewableMessage;
 
   event NewBasicNFTMinted (
     address sender,
@@ -28,7 +28,7 @@ contract DynamicNFT is ERC721URIStorage {
     console.log("dynamic nft");
   }
 
-  function buildBaseSVG(NFT memory nft) internal view returns (string memory) {
+  function buildBaseSVG(NFT memory nft) private view returns (string memory) {
     return string(abi.encodePacked(
       "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: ",
       nft.textColor,
@@ -40,7 +40,7 @@ contract DynamicNFT is ERC721URIStorage {
     ));
   }
 
-  function makeSVGTokenURL(NFT memory nft) internal view returns (string memory) {
+  function makeSVGTokenURL(NFT memory nft) private view returns (string memory) {
     //string memory finalSvg = string(abi.encodePacked(baseSvg, _word, "</text></svg>"));
     string memory finalSvg = buildBaseSVG(nft);
     string memory json = Base64.encode(bytes(string(

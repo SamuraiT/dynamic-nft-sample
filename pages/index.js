@@ -18,7 +18,7 @@ import {
   ShowSVGImage,
   baseSvgSrc
 } from "../components/utils"
-const CONTRACT_ADDRESS = "0x691A42DAD672C90Ba435eA01D2c5cB0f6943c46D"
+const CONTRACT_ADDRESS = "0xb0134f46fc2dF81C67aCC6dC6C5C735cfcc3101D"
 
 const ConnectWallet = ({setAcount}) => {
   return (

@@ -23,7 +23,7 @@ const main = async () => {
 
   const backgroundColor = "rgb(187, 73, 73)"
   const textColor = "rgb(224, 224, 224)"
-  const tx = await dnft.makeDyamicNFT("owners message あいう", "viewable message", textColor, backgroundColor)
+  const tx = await dnft.makeDyamicNFT("My first dynamic NFT. Interesting", "Omoshiroine NFT", textColor, backgroundColor)
   await tx.wait()
 
   const tokenURI = await dnft.tokenURI(0)

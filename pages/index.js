@@ -8,7 +8,7 @@ import {
   Input,
   Radio
 } from 'semantic-ui-react'
-const {Row, Column } = Grid
+const { Row, Column } = Grid
 
 import { ethers } from "ethers"
 import DynamicNFT from "../artifacts/contracts/DynamicNFT.sol/DynamicNFT.json"
@@ -69,7 +69,7 @@ const connectWallet = async (setAccount) => {
     }
 }
 
-const mintNft = async (ownersMsg, viewableMsg, setLoading, setTokenId) => {
+const mintNft = async (ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId) => {
   if (!viewableMsg || !ownersMsg) {
     alert('enter messages')
     return
@@ -83,7 +83,7 @@ const mintNft = async (ownersMsg, viewableMsg, setLoading, setTokenId) => {
       const signer = provider.getSigner()
       const contract = new ethers.Contract(CONTRACT_ADDRESS, DynamicNFT.abi, signer)
 
-      let tx = await contract.makeDyamicNFT(ownersMsg, viewableMsg)
+      let tx = await contract.makeDyamicNFT(ownersMsg, viewableMsg, textColor, backgroundColor)
       const logs = await tx.wait()
       setTokenId(logs.events[0].args.tokenId.toNumber())
       alert("Tada! 🎉 check your account in testnet opensea! https://testnets.opensea.io/ , it takes 5, 10min to dipct")
@@ -105,6 +105,7 @@ const Home = () => {
   const [backgroundColor, setBackgroundColor] = useState("rgb(0,0,0)")
   const [preview, setPreviewImage] = useState()
   const [option, setOption] = useState('owner')
+
   useEffect(() => {
     setWalletAccountIfConnected(setAcount)
   }, [])
@@ -167,7 +168,7 @@ const Home = () => {
 
                 <img src={baseSvgSrc(option == 'owner' ? ownersMsg : viewableMsg, backgroundColor, textColor)} />
               </div>
-              <Button onClick={() => mintNft(ownersMsg, viewableMsg, setLoading, setTokenId)} color='teal' size="large" loading={loading}>
+              <Button onClick={() => mintNft(ownersMsg, viewableMsg, textColor, backgroundColor, setLoading, setTokenId)} color='teal' size="large" loading={loading}>
                mint it
               </Button>
               </>

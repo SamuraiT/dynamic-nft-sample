@@ -134,7 +134,7 @@ const Home = ({NETWORK}) => {
   useEffect(() => {
     setWalletAccountIfConnected(setAcount, CONTRACT_ADDRESS)
     switchMaticNetwork()
-  }, [])
+  }, [account])
 
   useEffect(async() => {
     setDataURI(await getDataURI(tokenId, CONTRACT_ADDRESS))
@@ -201,7 +201,7 @@ const Home = ({NETWORK}) => {
             ) }
 
               <p style={{marginTop: "10px"}}>
-                Build with❤️  . Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
+                Build with❤️  . Check out the code <a href="https://github.com/henkaku-center/dynamic-nft-sample">here</a>
               </p>
             <Divider horizontal>
               <Header as='h4'>

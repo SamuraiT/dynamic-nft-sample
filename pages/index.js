@@ -163,14 +163,14 @@ const Home = ({NETWORK}) => {
               </div>
               <div>
                 <div style={{marginTop: '10px', paddingTop: "10px"}}>
-                  <span>pick background color: </span>
+                  <span>pick up background color: </span>
                   <SketchColorPicker color={backgroundColor} setColor={setBackgroundColor}/>
                 </div>
               </div>
 
               <div>
                 <div style={{marginTop: '10px', paddingTop: "10px"}}>
-                  <span>pick background color: </span>
+                  <span>pick up text color: </span>
                   <SketchColorPicker color={textColor} setColor={setTextColor}/>
                 </div>
               </div>
@@ -200,8 +200,8 @@ const Home = ({NETWORK}) => {
               </>
             ) }
 
-              <p style={{marginTop: "10px"}}>
-                Build with❤️  . Check out the code <a href="https://github.com/henkaku-center/dynamic-nft-sample">here</a>
+              <p style={{marginTop: "15px"}}>
+                Build with❤️  <a href="https://github.com/SamuraiT">yasek</a>. Check out the code <a href="https://github.com/henkaku-center/dynamic-nft-sample">here</a>
               </p>
             <Divider horizontal>
               <Header as='h4'>

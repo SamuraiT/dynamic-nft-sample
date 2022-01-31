@@ -201,7 +201,7 @@ const Home = ({NETWORK}) => {
             ) }
 
               <p style={{marginTop: "15px"}}>
-                Build with❤️  <a href="https://github.com/SamuraiT">yasek</a>. Check out the code <a href="https://github.com/henkaku-center/dynamic-nft-sample">here</a>
+                Build with❤️  <a href="https://github.com/SamuraiT">yasek</a>. Check out the code <a href="https://github.com/SamuraiT/dynamic-nft-sample">here</a>
               </p>
             <Divider horizontal>
               <Header as='h4'>

@@ -210,8 +210,7 @@ const Home = ({NETWORK}) => {
             </Divider>
             <p>Enter Token ID (must be a number)</p>
             <input value={tokenId} onChange={({target}) => setTokenId(target.value)} />
-            { tokenId && <p><a href={`https://opensea.io/matic/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
-            { tokenId && <p><a href={`https://rarible.com/search/collections/${CONTRACT_ADDRESS}:${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in rarible</a></p> }
+            { tokenId && <p><a href={`https://opensea.io/assets/matic/${CONTRACT_ADDRESS}/${tokenId}`} target="_blank" rel="noreferrer"> Check NFT in Opeansea</a></p> }
             { dataURI && <ShowSVGImage dataURI={dataURI} /> }
           </Container>
         </Column>
